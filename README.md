@@ -1,27 +1,40 @@
-# Conversational RAG & Persona Extractor
+Here is a shorter, more natural-sounding version. It sounds less like a textbook and more like a real engineer who is proud of their work but honest about its limits.
 
-This project processes chronological chat logs, detects topic boundaries, extracts user personas, and allows users to query the data via a Streamlit Chatbot.
+AI Engineer Intern Assignment: RAG & Persona Chatbot
+Here is my submission for the AI/ML Engineer Intern role! I built an end-to-end RAG system that reads chronological chat histories, detects natural topic changes, extracts user personas, and answers questions using a local vector database and the Groq API.
 
-## 🧠 Approach & Logic
+🔗 Live Links
+Live Chatbot: [Insert your Streamlit URL here]
 
-### 1. Topic Change Detection
-Instead of sending every message to an LLM to check if the topic changed (which is slow and expensive), this system uses **lightweight local embeddings** (`SentenceTransformer('all-MiniLM-L6-v2')`). 
-* A rolling buffer of recent messages is maintained.
-* As a new message arrives, we compute the cosine similarity between the new message and the buffer. 
-* If the similarity drops below a specific threshold (e.g., `< 0.25`), it signifies a **topic drift**. The buffer is flushed, summarized by the LLM, and saved as a Checkpoint in the vector database.
+Video Demo: [Insert your Loom video URL here]
 
-### 2. Retrieval Works (RAG)
-We use **ChromaDB** as the local vector store. When a user asks a question:
-1. The query is embedded and searched against ChromaDB to find the Top 3 most relevant Topic Summaries.
-2. The system pulls the attached metadata, which includes the exact raw message chunks.
-3. Both the summary and the raw chunks are passed to the LLM to synthesize the final answer.
+🛠️ How It Works
+1. Smart Topic Splitting
+Instead of just blindly chunking the text, I processed the messages chronologically. I used local sentence embeddings (all-MiniLM-L6-v2) to track the conversation. If the cosine similarity drops below a certain threshold, the system knows the topic changed, creates a checkpoint, and summarizes it.
 
-### 3. Persona Building
-The persona is extracted continuously at every **100-message checkpoint**. The LLM is prompted to extract facts strictly into a JSON schema (Habits, Personal Facts, Traits, Style). A Python function safely merges this new JSON into a global `persona.json` state, ensuring it updates dynamically over time without losing previous facts.
+2. Accurate Retrieval (RAG)
+To prevent hallucinations, the bot casts a wide net. When you ask a question, it retrieves both high-level topic summaries AND raw message chunks. I also used strict system prompts so the bot will admit "I don't know" instead of making up facts.
 
-## 🚀 How to Run Locally
+3. Data-Driven Persona
+The instructions asked to base the persona on actual signals, not just ChatGPT guesses. I used Python logic to calculate the user's average word count and emoji usage to figure out their communication style mathematically, and stored it all in a clean JSON format.
 
-1. Install dependencies: `pip install -r requirements.txt`
-2. Create a `.env` file and add your OpenAI API Key: `OPENAI_API_KEY=sk-...`
-3. Run the backend processor (Takes a few minutes): `python process_data.py`
-4. Run the Chatbot: `streamlit run app.py`
+⚖️ System Evaluation (The Good & The Bad)
+Building this taught me a lot about handling messy conversational data. Here is an honest look at the architecture:
+
+🌟 What Went Well
+Fast & Local: The heavy lifting (topic detection and embeddings) runs locally using basic tensor math, so it's incredibly fast and cheap. I also avoided heavy wrappers like LangChain to ensure I had total control over the chronological parsing.
+
+⚠️ What I'd Improve (Known Limitations)
+The Chunk Boundary Problem: Right now, raw messages are saved in rigid blocks of 5. Sometimes, a question and its answer get split across two different chunks. In a V2, I would use overlapping sliding windows (e.g., chunking 10 messages with a 5-message overlap) to keep the context intact.
+
+Semantic Dilution: The dataset has over 190,000 messages. If you ask a generic question like "Where are they moving?", the database finds dozens of people talking about moving. The system currently requires specific keywords in the prompt to find the exact needle in the haystack.
+
+💻 How to Run Locally
+Clone the repo and install dependencies:
+
+Bash
+pip install -r requirements.txt
+Run the Chatbot:
+
+Bash
+streamlit run app.py
