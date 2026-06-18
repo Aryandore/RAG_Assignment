@@ -3,8 +3,8 @@
 Here is my submission for the AI/ML Engineer Intern role! I built an end-to-end RAG system that reads chronological chat histories, detects natural topic changes, extracts user personas, and answers questions using a local vector database and the Groq API.
 
 ## 🔗 Live Links
-* **Live Chatbot:** [Insert your Streamlit URL here]
-* **Video Demo:** [Insert your Loom video URL here]
+* **Live Chatbot:** (https://ragassignment-d4xrqumkktyfkt8py36yen.streamlit.app/)
+
 
 ---
 
