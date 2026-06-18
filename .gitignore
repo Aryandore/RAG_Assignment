@@ -1,0 +1,5 @@
+vector_db/
+venv/
+__pycache__/
+conversations.csv
+.env

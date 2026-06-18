@@ -1,0 +1,22 @@
+{
+    "communication_style": {
+        "average_words_per_message": 11.1,
+        "style_description": "Detailed and descriptive",
+        "tone": "Standard, conversational"
+    },
+    "habits": [
+        "Active lifestyle (yoga, running, hiking mentioned)",
+        "Enjoys cooking and trying new recipes",
+        "Plays music (piano/band)"
+    ],
+    "personal_facts": [
+        "Single parent with kids",
+        "Works or studies in a specialized field (software engineer/radiology)",
+        "Loves classic cars"
+    ],
+    "personality_traits": [
+        "Friendly and approachable",
+        "Ambitious",
+        "Supportive"
+    ]
+}
