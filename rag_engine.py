@@ -38,24 +38,26 @@ def answer_query(user_question, persona_data):
         context_chunks = "Error retrieving chunks."
 
     # 3. Build Prompt
+   # 3. Build Prompt
     prompt = f"""
-    You are a strict, factual AI assistant built to answer questions about a user based ONLY on their provided conversation history and persona.
-    
-    Here is their extracted Persona:
+    You are an intelligent, conversational AI assistant analyzing a specific user's chat history. 
+    Your goal is to answer questions about this user accurately and naturally.
+
+    === KNOWLEDGE BASE ===
+    USER PERSONA:
     {json.dumps(persona_data, indent=2)}
-    
-    Here are the most relevant past topic summaries:
+
+    RELEVANT CONTEXT (Summaries & Chat Logs):
     {context_summaries}
-    
-    Here are the most relevant raw conversation chunks:
     {context_chunks}
-    
-    CRITICAL RULES:
-    1. Answer the user's question clearly and concisely based ONLY on the provided text above.
-    2. If the answer is NOT explicitly stated in the context summaries or chunks, you MUST reply exactly with: "I cannot find the answer to this in the conversation history." 
-    3. DO NOT guess, make up locations, or hallucinate information.
-    
-    Question: {user_question}
+
+    === INSTRUCTIONS ===
+    1. CONVERSATIONAL TONE: If the user input is a greeting (like "hi", "hello") or casual chat, respond politely as an AI assistant ready to help analyze the user's data. Do not search for facts if the user is just saying hello.
+    2. FACTUAL RAG: Answer questions based EXCLUSIVELY on the Knowledge Base above. Do not guess, assume, or hallucinate facts outside this data.
+    3. SMART FAILBACK: If the exact answer is not in the data, do not use robotic error messages. Instead, respond naturally. For example: "The chat logs don't mention their real name" or "The user doesn't mention owning a car, but they were talking to someone who owns a 1964 Impala."
+    4. CLARITY: Keep your answers concise, direct, and helpful.
+
+    User Input: {user_question}
     """
     
     # 4. Call Groq API (Using Llama 3)
